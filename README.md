@@ -1,0 +1,2 @@
+# freeRpc
+netty+zookeper实现简单的rpc框架，这里只完成了ZooKeeper的注册与发现，jdk动态代理，后续会花三个月的时间来完成这个开源项目
