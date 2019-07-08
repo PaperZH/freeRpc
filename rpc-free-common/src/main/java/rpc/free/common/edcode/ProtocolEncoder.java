@@ -13,7 +13,7 @@ import rpc.free.common.serializer.Serialize;
  * todo:
  * @create: 2019-05-16 14:31
  */
-public class ProtocolEncode extends MessageToByteEncoder {
+public class ProtocolEncoder extends MessageToByteEncoder {
   private Serialize serialize = new KryoSerializeImpl();
   @Override
   protected void encode(ChannelHandlerContext channelHandlerContext, Object msg, ByteBuf byteBuf) throws Exception {

@@ -1,5 +1,6 @@
 package rpc.free.common.model;
 
+
 /**
  * @program: rpcfree
  * @description: rpc 自定义request封装
@@ -9,7 +10,7 @@ package rpc.free.common.model;
  */
 public class RpcRequest {
   private String requestId; //请求ID
-  private Class<?> interfaceName; //接口名称
+  private String interfaceName; //接口名称
   private String serviceVersion;  //版本号
   private String methodName;  //请求方法
   private Class<?>[] parameterTypes; //参数类型
@@ -23,11 +24,11 @@ public class RpcRequest {
     this.requestId = requestId;
   }
 
-  public Class<?> getInterfaceName() {
+  public String getInterfaceName() {
     return interfaceName;
   }
 
-  public void setInterfaceName(Class<?> interfaceName) {
+  public void setInterfaceName(String interfaceName) {
     this.interfaceName = interfaceName;
   }
 

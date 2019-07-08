@@ -4,14 +4,12 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import rpc.free.common.util.InetUtil;
 import rpc.free.common.util.RegistryUtil;
 import rpc.free.registry.ServiceRegistry;
-
-import java.util.List;
 
 /**
  * @program: rpcfree
@@ -99,6 +97,7 @@ public class ServiceRegistryImpl implements ServiceRegistry {
     }
   }
 
+  @Override
   public void unRegister(String serviceName){
     LOGGER.info("UnRegister zookeeper");
     try{

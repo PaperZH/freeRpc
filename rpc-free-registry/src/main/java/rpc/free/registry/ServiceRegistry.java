@@ -20,4 +20,15 @@ public interface ServiceRegistry {
    * @return void
    **/
   void registry(String serviceName, String ServiceAddress) throws Exception;
+
+  /**
+   * @Author guozhang.zhang01
+   * @Description 
+   * //TODO guodong.zhang
+   *
+   * @Date 15:12 2019/7/8
+   * @Param [serviceName]
+   * @return void
+   **/
+  public void unRegister(String serviceName);
 }

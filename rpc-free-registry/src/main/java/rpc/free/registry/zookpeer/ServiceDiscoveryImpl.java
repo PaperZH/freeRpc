@@ -6,7 +6,7 @@ import org.apache.curator.framework.api.GetChildrenBuilder;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import rpc.free.common.util.Constant;
+import org.springframework.stereotype.Service;
 import rpc.free.common.util.RegistryUtil;
 import rpc.free.registry.ServiceDiscovery;
 import org.apache.commons.collections4.CollectionUtils;
@@ -52,7 +52,7 @@ public class ServiceDiscoveryImpl implements ServiceDiscovery {
       int size = serviceAddress.size();
       String address;
       //若只有一个地址
-      if(size ==1 ){
+      if(size == 1 ){
         address = serviceAddress.get(0);
         LOGGER.info("get only address node :{}",address);
       }else{
