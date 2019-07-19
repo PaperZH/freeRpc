@@ -106,9 +106,13 @@ public class RpcServer implements ApplicationContextAware,InitializingBean {
     }
   }
 
+  /**
+   * 扫描带有RpcService注解的类并初始化 handlMap
+   * @param applicationContext spring配置文件
+   * @throws BeansException bean包和子包出现的异常信息
+   */
   @Override
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-    /*扫描带有RpcService注解的类并初始化 handlMap*/
     Map<String,Object> serviceBeans = applicationContext.getBeansWithAnnotation(RpcService.class);
     if(!serviceBeans.isEmpty()){
       for(Object object:serviceBeans.values()){
@@ -123,7 +127,7 @@ public class RpcServer implements ApplicationContextAware,InitializingBean {
     }
   }
 
-  public void shutdown() {
+  private void shutdown() {
     LOGGER.info("Shutting down server {}", serviceAddress);
     bossGroup.shutdownGracefully();
     workerGroup.shutdownGracefully();

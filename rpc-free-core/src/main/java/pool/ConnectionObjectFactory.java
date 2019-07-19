@@ -38,8 +38,7 @@ public class ConnectionObjectFactory extends BasePooledObjectFactory<Channel> {
     this.port = port;
     this.connectTimes = connectTimes;
   }
-/********************************************** 1、连接新的channel *********************************************************/
-/********************************************** Start *********************************************************/
+/**********************************************1、连接新的channel Start **************************************/
   private Channel connectNewChannel(){
     Bootstrap bootstrap = new Bootstrap();
     bootstrap.channel(NioSocketChannel.class)
@@ -50,7 +49,7 @@ public class ConnectionObjectFactory extends BasePooledObjectFactory<Channel> {
           .option(ChannelOption.TCP_NODELAY,true)
           .connect(ip,port).sync();
       final Channel channel = channelFuture.channel();
-      addChannelListenner(channelFuture,channel);
+      addChannelListener(channelFuture,channel);
       return channel;
     } catch (InterruptedException e) {
       LOGGER.error("Interrupted {}",e);
@@ -59,7 +58,7 @@ public class ConnectionObjectFactory extends BasePooledObjectFactory<Channel> {
     return null;
   }
 
-  private void addChannelListenner(ChannelFuture future, Channel channel){
+  private void addChannelListener(ChannelFuture future, Channel channel){
     future.addListener(new ChannelFutureListener() {
       @Override
       public void operationComplete(ChannelFuture future) throws Exception {
@@ -94,7 +93,7 @@ public class ConnectionObjectFactory extends BasePooledObjectFactory<Channel> {
     p.getObject().close().addListener(new ChannelFutureListener() {
       @Override
       public void operationComplete(ChannelFuture future) throws Exception {
-        LOGGER.info("CLOSE FINISTH");
+        LOGGER.info("CLOSE FINISH");
       }
     });
   }

@@ -6,7 +6,6 @@ import org.apache.curator.framework.api.GetChildrenBuilder;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import rpc.free.common.util.RegistryUtil;
 import rpc.free.registry.ServiceDiscovery;
 import org.apache.commons.collections4.CollectionUtils;

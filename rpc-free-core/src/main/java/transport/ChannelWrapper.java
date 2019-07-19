@@ -13,6 +13,7 @@ import pool.ConnectionObjectFactory;
  * todo:
  * @create: 2019-05-16 18:19
  */
+
 public class ChannelWrapper {
   private String connStr;
   private String host;
