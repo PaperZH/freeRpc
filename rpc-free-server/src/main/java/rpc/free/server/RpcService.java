@@ -7,12 +7,13 @@ import java.lang.annotation.Target;
 
 import org.springframework.stereotype.Component;
 
-/**@**
-    * RPC 服务注解（标注在服务实现类上）
-    *
-    * @author huangyong
-    * @since 1.0.0
-    */
+/**
+ * @param
+ * @description:
+ * @return:
+ * @author: zhangguodong12
+ * @time: 2020/6/19 17:22
+ */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Component

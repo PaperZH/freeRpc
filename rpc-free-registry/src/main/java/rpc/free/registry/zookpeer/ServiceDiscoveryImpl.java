@@ -54,11 +54,13 @@ public class ServiceDiscoveryImpl implements ServiceDiscovery {
       if(size == 1 ){
         address = serviceAddress.get(0);
         LOGGER.info("get only address node :{}",address);
+        System.out.println(address);
       }else{
+          //todo: 轮询策略
         address = serviceAddress.get(ThreadLocalRandom.current().nextInt(size));
         LOGGER.info("get random address node :{}",address);
       }
-      return curatorFramework.getData().forPath(serviceZKPath+"/"+address).toString();
+      return address;
     } catch (Exception e) {
       e.printStackTrace();
     }

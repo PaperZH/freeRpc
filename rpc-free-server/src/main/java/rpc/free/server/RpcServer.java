@@ -8,13 +8,13 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.slf4j.Logger;
+import org.springframework.util.StringUtils;
 import rpc.free.common.edcode.ProtocolDecoder;
 import rpc.free.common.edcode.ProtocolEncoder;
 import rpc.free.registry.ServiceRegistry;
@@ -119,7 +119,7 @@ public class RpcServer implements ApplicationContextAware,InitializingBean {
         RpcService rpcService = object.getClass().getAnnotation(RpcService.class);
         String serviceName = rpcService.value().getName();
         String rpcServerVersion = rpcService.version();
-        if(StringUtils.isNotEmpty(rpcServerVersion)){
+        if(!StringUtils.isEmpty(rpcServerVersion)){
           serviceName += "-" + rpcServerVersion;
         }
         handlMap.put(serviceName, object);

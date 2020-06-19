@@ -12,7 +12,7 @@ import rpc.free.registry.zookpeer.ServiceRegistryImpl;
  * @create: 2019-06-24 09:50
  */
 public class testRegitry {
-  private static String zkConn = "127.0.0.1:2888,127.0.0.1:3888,127.0.0.1:2889,,127.0.0.1:3889,127.0.0.1:2899,127.0.0.1:3899";
+  private static String zkConn = "127.0.0.1:2181";
   @Test
   public void Registy() throws Exception {
     ServiceRegistry serviceRegistry = new ServiceRegistryImpl(zkConn,8888);

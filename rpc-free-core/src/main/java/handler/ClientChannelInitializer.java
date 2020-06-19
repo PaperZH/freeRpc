@@ -6,7 +6,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import rpc.free.common.edcode.ProtocolDecoder;
-import rpc.free.common.edcode.ProtocolEncode;
+import rpc.free.common.edcode.ProtocolEncoder;
 
 /**
  * @program: rpcfree
@@ -20,7 +20,7 @@ public class ClientChannelInitializer extends ChannelInitializer<Channel> {
   protected void initChannel(Channel channel) throws Exception {
     channel.pipeline().addLast(new LoggingHandler(LogLevel.INFO))
         .addLast((ChannelHandler) new ProtocolDecoder(10*1024*1024))
-        .addLast((ChannelHandler) new ProtocolEncode())
+        .addLast((ChannelHandler) new ProtocolEncoder())
         .addLast(new RpcClientHandler());
   }
 }

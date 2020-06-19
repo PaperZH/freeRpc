@@ -52,7 +52,7 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
      * @Author guozhang.zhang01
      * FastClass serviceFastClass = FastClass.create(serviceClass)
      * FastMethod serviceFastMethod = serviceFastClass.getMethod(methodName, parameterTypes);
-     *Object result = serviceFastMethod.invoke(serviceBean, parameters)
+     * Object result = serviceFastMethod.invoke(serviceBean, parameters)
      */
     RpcResponse rpcResponse = new RpcResponse();
     rpcResponse.setRequestId(requestId);
