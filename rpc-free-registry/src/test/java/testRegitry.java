@@ -1,8 +1,8 @@
 import org.junit.Test;
-import rpc.free.registry.ServiceDiscovery;
-import rpc.free.registry.ServiceRegistry;
-import rpc.free.registry.zookpeer.ServiceDiscoveryImpl;
-import rpc.free.registry.zookpeer.ServiceRegistryImpl;
+import rpc.free.registry.zookpeer.ServiceDiscovery;
+import rpc.free.registry.zookpeer.ServiceRegistry;
+import rpc.free.registry.zookpeer.impl.ServiceDiscoveryImpl;
+import rpc.free.registry.zookpeer.impl.ServiceRegistryImpl;
 
 /**
  * @program: rpcfree

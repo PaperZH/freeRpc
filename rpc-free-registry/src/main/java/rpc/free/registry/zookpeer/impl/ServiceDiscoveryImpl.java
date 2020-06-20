@@ -1,4 +1,4 @@
-package rpc.free.registry.zookpeer;
+package rpc.free.registry.zookpeer.impl;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -7,8 +7,9 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rpc.free.common.util.RegistryUtil;
-import rpc.free.registry.ServiceDiscovery;
 import org.apache.commons.collections4.CollectionUtils;
+import rpc.free.registry.zookpeer.ServiceDiscovery;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 

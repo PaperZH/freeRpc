@@ -1,4 +1,4 @@
-package rpc.free.registry;
+package rpc.free.registry.zookpeer;
 
 /**
  * @program: rpcfree

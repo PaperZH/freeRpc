@@ -10,7 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>rpc-free-registry</artifactId>
+    <properties>
+        <version.spring>5.1.2.RELEASE</version.spring>
+        <version.spring.boot>2.1.6.RELEASE</version.spring.boot>
+    </properties>
     <dependencies>
+
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-framework</artifactId>
