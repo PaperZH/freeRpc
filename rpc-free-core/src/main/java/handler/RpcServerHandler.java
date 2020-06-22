@@ -1,6 +1,7 @@
 package handler;
 
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.internal.StringUtil;
@@ -18,6 +19,7 @@ import java.util.Map;
  * todo:
  * @create: 2019-05-16 16:11
  */
+@ChannelHandler.Sharable
 public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RpcServerHandler.class);
@@ -37,7 +39,7 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
     }
     Object serviceBean = services.get(serviceName);
     if(serviceBean == null){
-      throw new RuntimeException(String.format("can't find service of key: s%", serviceName));
+      throw new RuntimeException(String.format("[rpc-free-server-exception]:can't find service of key: s%", serviceName));
     }
     Class<?> serviceClass = serviceBean.getClass();
     Object[] params = rpcRequest.getParameters();
@@ -61,7 +63,7 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
   }
   @Override
   public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-    LOGGER.error("rpc.free.common.model.Exception caught on {},",ctx.channel(),cause);
+    LOGGER.error("[rpc-free-common]: model exception caught on {},",ctx.channel(),cause);
     ctx.channel().close();
   }
 }

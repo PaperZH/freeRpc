@@ -9,7 +9,7 @@ import org.springframework.core.type.AnnotationMetadata;
  * @Package: rpc.free.server
  * @ClassName: RpcServerRegister
  * @Author: zhangguodong12
- * @Description: rpc注解启动类
+ * @Description: rpc注解条件启动类
  * @Date: 2020/6/20 14:32
  * @Version: 1.0
  */

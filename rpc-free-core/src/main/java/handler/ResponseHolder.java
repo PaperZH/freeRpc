@@ -13,6 +13,15 @@ import java.util.concurrent.ConcurrentMap;
  * todo:
  * @create: 2019-05-16 15:52
  */
-public class ResponseHolder {
+class ResponseHolder {
+
   public static ConcurrentMap<String,BlockingQueue<RpcResponse>> responseMap = new ConcurrentHashMap<>();
+
+  public BlockingQueue<RpcResponse> get(String key){
+    return responseMap.get(key);
+  }
+
+  public void set(RpcResponse rpcResponse){
+
+  }
 }

@@ -10,7 +10,7 @@ import java.lang.reflect.Proxy;
 
 /**
  * @program: rpcfree
- * @description: jdk自带的代理，用接口映射代理，对不能实现代理
+ * @description: jdk自带的代理，用接口映射代理
  * @author: guodong.zhang
  * todo:
  * @create: 2019-05-16 17:12

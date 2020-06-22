@@ -12,17 +12,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import rpc.free.common.edcode.ProtocolDecoder;
 import rpc.free.common.edcode.ProtocolEncoder;
 import rpc.free.registry.zookpeer.ServiceRegistry;
 import rpc.free.registry.zookpeer.impl.ServiceRegistryImpl;
 
+import java.io.*;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @program: rpcfree
@@ -31,19 +31,15 @@ import java.util.Map;
  * todo:
  * @create: 2019-05-21 16:58
  */
-@Component
 public class RpcServer implements ApplicationContextAware, InitializingBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(RpcServer.class);
 
     private Map<String, Object> handlMap;
 
-    @Value("${free.rpc.service.address}")
     private String serviceAddress;
 
-    @Value("${free.rpc.service.zkCon}")
     private String zkCon;
 
-    @Value("${free.rpc.service.port}")
     private String port;
 
     @Override
@@ -68,8 +64,8 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
                     });
             /*channel option 含义
              * ChannelOption.SO_BACKLOG：对应的是tcp/ip协议listen函数中的backlog参数，
-             * ChanneOption.SO_REUSEADDR：对应于套接字选项中的SO_REUSEADDR，这个参数表示允许重复使用本地地址和端口
-             * Channeloption.SO_KEEPALIVE：参数对应于套接字选项中的SO_KEEPALIVE，该参数用于设置TCP连接
+             * ChannelOption.SO_REUSEADDR：对应于套接字选项中的SO_REUSEADDR，这个参数表示允许重复使用本地地址和端口
+             * ChannelOption.SO_KEEPALIVE：参数对应于套接字选项中的SO_KEEPALIVE，该参数用于设置TCP连接
              * ChannelOption.SO_SNDBUF：参数对应于套接字选项中的SO_SNDBUF，ChannelOption.SO_RCVBUF参数对应于套接字选项中的
              * SO_RCVBUF这两个参数用于操作接收缓冲区和发送缓冲区的大小，接收缓冲区用于保存网络协议站内收到的数据，
              * 直到应用程序读取成功，发送缓冲区用于保存发送数据，直到发送成功
@@ -79,16 +75,14 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
             //获取RPC服务器的IP地址与端口号
             String[] addressArray = StringUtils.split(serviceAddress, ":");
             String ip = addressArray[0];
-            int port = Integer.parseInt(addressArray[1]);
+            int servPort = Integer.parseInt(addressArray[1]);
             //启动RPC服务
-            ChannelFuture channelFuture = bootstrap.bind(ip, port).sync();
+            ChannelFuture channelFuture = bootstrap.bind(ip, servPort).sync();
             //注册RPC服务
-            ServiceRegistry serviceRegistry = new ServiceRegistryImpl(zkCon, port);
-            if (serviceRegistry != null) {
-                for (String interfaceName : handlMap.keySet()) {
-                    serviceRegistry.registry(interfaceName, serviceAddress);
-                    LOGGER.info("register service: {} => {}", interfaceName, serviceAddress);
-                }
+            ServiceRegistry serviceRegistry = new ServiceRegistryImpl(zkCon,Integer.parseInt(port));
+            for (String interfaceName : handlMap.keySet()) {
+                serviceRegistry.registry(interfaceName, serviceAddress);
+                LOGGER.info("register service: {} => {}", interfaceName, serviceAddress);
             }
             LOGGER.info("server started on port {}", port);
             //关闭 RPC服务器
@@ -108,6 +102,7 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
      */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        configPropertySet();
         Map<String, Object> serviceBeans = applicationContext.getBeansWithAnnotation(RpcService.class);
         if (!serviceBeans.isEmpty()) {
             for (Object object : serviceBeans.values()) {
@@ -122,8 +117,36 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
         }
     }
 
+    private void configPropertySet(){
+        Properties properties = new Properties();
+        InputStream in = null;
+        String confPath = System.getProperty("user.dir");
+        confPath = confPath + File.separator + "application.properties";
+        File file = new File(confPath);
+        if (file.exists()) {
+            LOGGER.info("[Rc-free-server-info]:配置文件路径-->>:{}",confPath);
+            try {
+                in = new FileInputStream(new File(confPath));
+            } catch (FileNotFoundException e) {
+                LOGGER.info("[Rc-free-server-info]:file not found:{}",confPath);
+            }
+        }else {
+            LOGGER.info("[Rc-free-server-info]:项目路劲【{}】下无连接信息，从classpath下加载",confPath);
+            in = RpcServer.class.getClassLoader().getResourceAsStream("application.properties");
+        }
+        try {
+            properties.load(in);
+        } catch (IOException e) {
+            LOGGER.info("[Rc-free-server-info]:IOException:{}",confPath);
+        }
+        serviceAddress = properties.getProperty("free.rpc.service.zkCon");
+        zkCon = properties.getProperty("free.rpc.service.address");
+        port = properties.getProperty("free.rpc.service.ip");
+    }
+
+
     private void shutdown(EventLoopGroup bossGroup, EventLoopGroup workerGroup) {
-        LOGGER.info("Shutting down server {}", serviceAddress);
+        LOGGER.info("[Rc-free-server-info]:Shutting down server {}", serviceAddress);
         bossGroup.shutdownGracefully();
         workerGroup.shutdownGracefully();
     }
