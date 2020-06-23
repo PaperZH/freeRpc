@@ -7,6 +7,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,9 +42,9 @@ public class ConnectionObjectFactory extends BasePooledObjectFactory<Channel> {
 /**********************************************1、连接新的channel Start **************************************/
   private Channel connectNewChannel(){
     Bootstrap bootstrap = new Bootstrap();
-    bootstrap.channel(NioSocketChannel.class)
-        .group(new NioEventLoopGroup())
-        .handler(new ClientChannelInitializer());
+    bootstrap.group(new NioEventLoopGroup())
+            .channel(NioSocketChannel.class)
+            .handler(new ClientChannelInitializer());
     try{
       final ChannelFuture channelFuture = bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS,3000)
           .option(ChannelOption.TCP_NODELAY,true)
@@ -98,6 +99,7 @@ public class ConnectionObjectFactory extends BasePooledObjectFactory<Channel> {
     });
   }
 
+
   @Override
   public boolean validateObject(PooledObject<Channel> p) {
     return p.getObject().isActive();
@@ -105,7 +107,7 @@ public class ConnectionObjectFactory extends BasePooledObjectFactory<Channel> {
 
   @Override
   public PooledObject<Channel> wrap(Channel channel) {
-    return new DefaultPooledObject<Channel>(channel);
+    return new DefaultPooledObject<>(channel);
   }
 
 }

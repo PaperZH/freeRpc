@@ -37,7 +37,7 @@ public class ClientImpl extends Client {
   private Class<? extends ClientProxy> clientProxyClass;
   private ClientProxy cliet;
   // 存放字符串Channel对应的map
-  public static CopyOnWriteArrayList<ChannelWrapper> channelWrappers = new CopyOnWriteArrayList<ChannelWrapper>();
+  public static CopyOnWriteArrayList<ChannelWrapper> channelWrappers = new CopyOnWriteArrayList<>();
 
 
   @Override

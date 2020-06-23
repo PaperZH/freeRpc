@@ -20,9 +20,10 @@ import rpc.free.common.edcode.ProtocolEncoder;
 import rpc.free.registry.zookpeer.ServiceRegistry;
 import rpc.free.registry.zookpeer.impl.ServiceRegistryImpl;
 
-import java.io.*;
 import java.util.Map;
 import java.util.Properties;
+
+import static rpc.free.common.util.ConfigPropertes.configProperty;
 
 /**
  * @program: rpcfree
@@ -102,7 +103,7 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
      */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        configPropertySet();
+        initPropertiesSet(configProperty());
         Map<String, Object> serviceBeans = applicationContext.getBeansWithAnnotation(RpcService.class);
         if (!serviceBeans.isEmpty()) {
             for (Object object : serviceBeans.values()) {
@@ -117,32 +118,12 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
         }
     }
 
-    private void configPropertySet(){
-        Properties properties = new Properties();
-        InputStream in = null;
-        String confPath = System.getProperty("user.dir");
-        confPath = confPath + File.separator + "application.properties";
-        File file = new File(confPath);
-        if (file.exists()) {
-            LOGGER.info("[Rc-free-server-info]:配置文件路径-->>:{}",confPath);
-            try {
-                in = new FileInputStream(new File(confPath));
-            } catch (FileNotFoundException e) {
-                LOGGER.info("[Rc-free-server-info]:file not found:{}",confPath);
-            }
-        }else {
-            LOGGER.info("[Rc-free-server-info]:项目路劲【{}】下无连接信息，从classpath下加载",confPath);
-            in = RpcServer.class.getClassLoader().getResourceAsStream("application.properties");
-        }
-        try {
-            properties.load(in);
-        } catch (IOException e) {
-            LOGGER.info("[Rc-free-server-info]:IOException:{}",confPath);
-        }
+    private void initPropertiesSet(Properties properties){
         serviceAddress = properties.getProperty("free.rpc.service.zkCon");
         zkCon = properties.getProperty("free.rpc.service.address");
         port = properties.getProperty("free.rpc.service.ip");
     }
+
 
 
     private void shutdown(EventLoopGroup bossGroup, EventLoopGroup workerGroup) {

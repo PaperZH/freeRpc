@@ -23,13 +23,13 @@ public class RpcClientInterpret {
      *
      * 1、execution(public * *(..)) 任意的公共方法
      * 2、execution（* set*（..）） 以set开头的所有的方法
-     * 3、execution（* com.lingyejun.annotation.LoggerApply.*（..））com.lingyejun.annotation.LoggerApply这个类里的所有的方法
-     * 4、execution（* com.lingyejun.annotation.*.*（..））com.lingyejun.annotation包下的所有的类的所有的方法
-     * 5、execution（* com.lingyejun.annotation..*.*（..））com.lingyejun.annotation包及子包下所有的类的所有的方法
-     * 6、execution(* com.lingyejun.annotation..*.*(String,?,Long)) com.lingyejun.annotation包及子包下所有的类的有三个参数，第一个参数为String类型，第二个参数为任意类型，第三个参数为Long类型的方法
-     * 7、execution(@annotation(com.lingyejun.annotation.Lingyejun))
+     * 3、execution（* com.*.annotation.LoggerApply.*（..））com.*.annotation.LoggerApply这个类里的所有的方法
+     * 4、execution（* com.*.annotation.*.*（..））com.*.annotation包下的所有的类的所有的方法
+     * 5、execution（* com.*.annotation..*.*（..））com.*.annotation包及子包下所有的类的所有的方法
+     * 6、execution(* com.*.annotation..*.*(String,?,Long)) com.*.annotation包及子包下所有的类的有三个参数，第一个参数为String类型，第二个参数为任意类型，第三个参数为Long类型的方法
+     * 7、execution(@annotation())
      */
-    @Pointcut("@annotation(rpc.free.client.RomoteClient)")
+    @Pointcut("@annotation(rpc.free.client.RemoteClient)")
     private void remoteMethod() {
 
     }
@@ -39,7 +39,6 @@ public class RpcClientInterpret {
      */
     @Before("remoteMethod()")
     public void begin() {
-        System.out.println("==@Before== lingyejun blog logger : begin");
     }
 
     /**
@@ -47,7 +46,6 @@ public class RpcClientInterpret {
      */
     @AfterReturning("remoteMethod()")
     public void afterReturning() {
-        System.out.println("==@AfterReturning== lingyejun blog logger : after returning");
     }
 
     /**
@@ -55,7 +53,6 @@ public class RpcClientInterpret {
      */
     @After("remoteMethod()")
     public void after() {
-        System.out.println("==@After== lingyejun blog logger : finally returning");
     }
 
     /**
@@ -63,7 +60,6 @@ public class RpcClientInterpret {
      */
     @AfterThrowing("remoteMethod()")
     public void afterThrowing() {
-        System.out.println("==@AfterThrowing== lingyejun blog logger : after throwing");
     }
 
     /**
@@ -71,6 +67,10 @@ public class RpcClientInterpret {
      */
     @Around("remoteMethod()")
     public Object around(ProceedingJoinPoint joinPoint){
+        //目标方法名称
+        String methodName = joinPoint.getSignature().getName();
+        //获取方法传入参数
+        Object[] params = joinPoint.getArgs();
 
         return null;
     }
