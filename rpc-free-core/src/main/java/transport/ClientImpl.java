@@ -46,7 +46,6 @@ public class ClientImpl extends Client {
     request.setRequestId(String.valueOf(atomicLong.incrementAndGet()));
     request.setMethodName(method.getName());
     request.setParameters(args);
-    request.setClazz(clazz);
     request.setInterfaceName(serviceName);
     request.setParameters(method.getParameterTypes());
 

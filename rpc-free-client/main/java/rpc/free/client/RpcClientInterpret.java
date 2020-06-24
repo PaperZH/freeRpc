@@ -15,7 +15,6 @@ import rpc.free.common.util.ConfigPropertes;
 import rpc.free.registry.zookpeer.ServiceDiscovery;
 import rpc.free.registry.zookpeer.impl.ServiceDiscoveryImpl;
 
-import java.util.Properties;
 import java.util.concurrent.atomic.AtomicLong;
 
 
