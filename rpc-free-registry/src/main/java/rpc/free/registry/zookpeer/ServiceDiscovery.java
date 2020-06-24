@@ -17,5 +17,5 @@ public interface ServiceDiscovery {
    * @Param [serviceName]
    * @return java.lang.String
    **/
-  String discovery(String serviceName) throws Exception;
+  String discovery(String serviceName);
 }

@@ -13,7 +13,6 @@ public class RpcRequest {
   private String interfaceName; //接口名称
   private String serviceVersion;  //版本号
   private String methodName;  //请求方法
-  private Class<?> clazz;//请求接口
   private Class<?>[] parameterTypes; //参数类型
   private Object[] parameters;  //参数对象
 
@@ -47,14 +46,6 @@ public class RpcRequest {
 
   public void setMethodName(String methodName) {
     this.methodName = methodName;
-  }
-
-  public Class<?> getClazz() {
-    return clazz;
-  }
-
-  public void setClazz(Class<?> clazz) {
-    this.clazz = clazz;
   }
 
   public Class<?>[] getParameterTypes() {

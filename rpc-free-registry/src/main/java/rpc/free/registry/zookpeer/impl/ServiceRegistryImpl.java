@@ -6,6 +6,7 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rpc.free.common.util.Constant;
 import rpc.free.common.util.InetUtil;
 import rpc.free.common.util.RegistryUtil;
 import rpc.free.registry.zookpeer.ServiceRegistry;
@@ -38,9 +39,9 @@ public class ServiceRegistryImpl implements ServiceRegistry {
 
     curatorFramework= CuratorFrameworkFactory.builder()
         .connectString(zkConn)
-        .connectionTimeoutMs(2000)
-        .sessionTimeoutMs(5000)
-        .retryPolicy(new ExponentialBackoffRetry(1000,3))
+        .connectionTimeoutMs(Constant.ZK_CONNECTION_TIMEOUT.getCode())
+        .sessionTimeoutMs(Constant.ZK_SESSION_TIMEOUT.getCode())
+        .retryPolicy(new ExponentialBackoffRetry(Constant.BASE_SLEEP_TIME_S.getCode(),Constant.MAX_RETRIES.getCode()))
         .build();
 
     curatorFramework.start();

@@ -7,7 +7,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
-import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +52,7 @@ public class ConnectionObjectFactory extends BasePooledObjectFactory<Channel> {
       addChannelListener(channelFuture,channel);
       return channel;
     } catch (InterruptedException e) {
-      LOGGER.error("Interrupted {}",e);
+      LOGGER.error("[rpc-free-core-ConnectionObjectFactory]:Interrupted",e);
       Thread.currentThread().interrupt();
     }
     return null;
@@ -64,7 +63,7 @@ public class ConnectionObjectFactory extends BasePooledObjectFactory<Channel> {
       @Override
       public void operationComplete(ChannelFuture future) throws Exception {
         if(future.isSuccess()){
-          LOGGER.info("Connect success {}" ,future);
+          LOGGER.info("[rpc-free-core-ConnectionObjectFactory]:Connect success {}" ,future);
         }
       }
     });
@@ -72,7 +71,7 @@ public class ConnectionObjectFactory extends BasePooledObjectFactory<Channel> {
     channel.closeFuture().addListener(new ChannelFutureListener() {
       @Override
       public void operationComplete(ChannelFuture future) throws Exception {
-        LOGGER.info("Channel close {}:{}", ip, port);
+        LOGGER.info("[rpc-free-core-ConnectionObjectFactory]:Channel close {}:{}", ip, port);
       }
     });
   }
@@ -85,6 +84,7 @@ public class ConnectionObjectFactory extends BasePooledObjectFactory<Channel> {
       if(null != channel){
         return channel;
       }
+      LOGGER.info("[rpc-free-core-ConnectionObjectFactory]:reconnect {} times",i);
     }
     return null;
   }
@@ -94,7 +94,7 @@ public class ConnectionObjectFactory extends BasePooledObjectFactory<Channel> {
     p.getObject().close().addListener(new ChannelFutureListener() {
       @Override
       public void operationComplete(ChannelFuture future) throws Exception {
-        LOGGER.info("CLOSE FINISH");
+        LOGGER.info("[rpc-free-core-ConnectionObjectFactory]:CLOSE FINISH");
       }
     });
   }

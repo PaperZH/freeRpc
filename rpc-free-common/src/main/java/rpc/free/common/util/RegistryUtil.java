@@ -8,6 +8,8 @@ package rpc.free.common.util;
  * @create: 2019-05-16 14:54
  */
 public class RegistryUtil {
+
+
   public static String getServicePath(String serviceName){
     return Constant.ZK_REGISTER_PATH.getDesc() + "/services/" + serviceName;
   }

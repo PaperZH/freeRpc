@@ -27,7 +27,7 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcResponse> {
     if(blockingQueue != null){
       blockingQueue.put(rpcResponse);
     } else{
-      ResponseHolder.responseMap.get(rpcResponse.getRequestId());
+      ResponseHolder.set(rpcResponse.getRequestId(),rpcResponse);
     }
   }
 

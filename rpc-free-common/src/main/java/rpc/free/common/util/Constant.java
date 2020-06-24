@@ -3,7 +3,9 @@ package rpc.free.common.util;
 public enum Constant {
   ZK_SESSION_TIMEOUT(5000,""),
   ZK_CONNECTION_TIMEOUT(5000,""),
-  ZK_REGISTER_PATH(101,"/freerpc");
+  ZK_REGISTER_PATH(101,"/freerpc"),
+  BASE_SLEEP_TIME_S(3000,""),
+  MAX_RETRIES(3,"");
 
   private Integer code;
 

@@ -20,4 +20,13 @@ import java.lang.annotation.*;
 @Inherited
 @Import(RpcClient.class)
 public @interface EnableRpcClient {
+    /**
+     * 应用名称
+     */
+    String appName();
+
+    /**
+     * 服务版本号
+     */
+    String version() default "";
 }

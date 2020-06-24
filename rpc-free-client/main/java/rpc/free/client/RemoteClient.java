@@ -21,10 +21,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Component
 public @interface RemoteClient {
+
     /**
      * 服务接口类名称
      */
-    String serviceName();
+    String ServiceName();
 
     /**
      * 服务版本号

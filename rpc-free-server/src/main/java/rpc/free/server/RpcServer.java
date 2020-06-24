@@ -43,8 +43,10 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
 
     private String port;
 
+    private String appName;
+
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
 
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -79,8 +81,11 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
             int servPort = Integer.parseInt(addressArray[1]);
             //启动RPC服务
             ChannelFuture channelFuture = bootstrap.bind(ip, servPort).sync();
-            //注册RPC服务
+            //注册RPC服务应用
             ServiceRegistry serviceRegistry = new ServiceRegistryImpl(zkCon,Integer.parseInt(port));
+            //--先注册应用
+            serviceRegistry.registry(appName, serviceAddress);
+            //--注册接口
             for (String interfaceName : handlMap.keySet()) {
                 serviceRegistry.registry(interfaceName, serviceAddress);
                 LOGGER.info("register service: {} => {}", interfaceName, serviceAddress);
@@ -119,9 +124,11 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
     }
 
     private void initPropertiesSet(Properties properties){
-        serviceAddress = properties.getProperty("free.rpc.service.zkCon");
-        zkCon = properties.getProperty("free.rpc.service.address");
-        port = properties.getProperty("free.rpc.service.ip");
+
+        serviceAddress = properties.getProperty("free.rpc.service.address");
+        zkCon = properties.getProperty("free.rpc.service.zkCon");
+        port = properties.getProperty("free.rpc.service.port");
+        appName = properties.getProperty("free.rpc.service.appName");
     }
 
 

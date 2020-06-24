@@ -1,9 +1,22 @@
 package rpc.free.client;
 
+import io.netty.channel.Channel;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import pool.ChannelPool;
+import rpc.free.common.model.RpcRequest;
+import rpc.free.common.util.ConfigPropertes;
+import rpc.free.registry.zookpeer.ServiceDiscovery;
+import rpc.free.registry.zookpeer.impl.ServiceDiscoveryImpl;
+
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicLong;
+
 
 /**
  * @ProjectName: freeRpc
@@ -18,6 +31,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Lazy(false)
 public class RpcClientInterpret {
+
+    private AtomicLong atomicLong = new AtomicLong();
+
+    private Logger logger = LoggerFactory.getLogger(RpcClientInterpret.class);
     /**
      * 定义切入点：对要拦截的方法进行定义与限制，如包、类
      *
@@ -67,11 +84,31 @@ public class RpcClientInterpret {
      */
     @Around("remoteMethod()")
     public Object around(ProceedingJoinPoint joinPoint){
+
         //目标方法名称
         String methodName = joinPoint.getSignature().getName();
         //获取方法传入参数
         Object[] params = joinPoint.getArgs();
+        RemoteClient remoteClient = ((MethodSignature)joinPoint.getSignature()).getMethod().getAnnotation(RemoteClient.class);
+        String serviceName = remoteClient.ServiceName();
+        RpcRequest request = new RpcRequest();
+        request.setRequestId(String.valueOf(atomicLong.incrementAndGet()));
+        request.setMethodName(methodName);
+        request.setParameters(params);
+        request.setInterfaceName(serviceName);
+        //registry discovery
+        String zkCon = ConfigPropertes.configProperty().getProperty("free.rpc.service.address");
+        ServiceDiscovery serviceDiscovery = new ServiceDiscoveryImpl(zkCon);
+        String address = serviceDiscovery.discovery(serviceName);
+        String ip = address.split(":")[0];
+        int port = Integer.parseInt(address.split(":")[1]);
+        Channel channel = ChannelPool.getChannel(ip, port);
 
-        return null;
+        try {
+            channel.writeAndFlush(request).sync();
+        } catch (InterruptedException e) {
+            logger.info("[rpc-free-client-RpcClientInterpret]:", e);
+        }
+        return joinPoint;
     }
 }
