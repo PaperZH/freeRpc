@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import pool.ChannelPool;
 import rpc.free.common.model.RpcRequest;
 import rpc.free.common.util.ConfigPropertes;
@@ -91,15 +92,22 @@ public class RpcClientInterpret {
         Object[] params = joinPoint.getArgs();
         RemoteClient remoteClient = ((MethodSignature)joinPoint.getSignature()).getMethod().getAnnotation(RemoteClient.class);
         String serviceName = remoteClient.ServiceName();
+        String version = remoteClient.version();
+        String askServerName ;
+        if(StringUtils.isEmpty(version)){
+            askServerName = serviceName;
+        }else{
+            askServerName = serviceName + "-" + version;
+        }
         RpcRequest request = new RpcRequest();
         request.setRequestId(String.valueOf(atomicLong.incrementAndGet()));
         request.setMethodName(methodName);
         request.setParameters(params);
-        request.setInterfaceName(serviceName);
+        request.setInterfaceName(askServerName);
         //registry discovery
         String zkCon = ConfigPropertes.configProperty().getProperty("free.rpc.service.address");
         ServiceDiscovery serviceDiscovery = new ServiceDiscoveryImpl(zkCon);
-        String address = serviceDiscovery.discovery(serviceName);
+        String address = serviceDiscovery.discovery(askServerName);
         String ip = address.split(":")[0];
         int port = Integer.parseInt(address.split(":")[1]);
         Channel channel = ChannelPool.getChannel(ip, port);
