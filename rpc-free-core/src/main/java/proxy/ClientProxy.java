@@ -10,5 +10,5 @@ import transport.Client;
  * @create: 2019-05-16 16:41
  */
 public interface ClientProxy {
-  public <T> T proxyInterface(Client client,final Class<T> serviceInterface);
+  <T> T proxyInterface(Client client,final Class<T> serviceInterface);
 }

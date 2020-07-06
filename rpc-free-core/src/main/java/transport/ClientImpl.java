@@ -37,7 +37,15 @@ public class ClientImpl extends Client {
   private Class<? extends ClientProxy> clientProxyClass;
   private ClientProxy cliet;
   // 存放字符串Channel对应的map
-  public static CopyOnWriteArrayList<ChannelWrapper> channelWrappers = new CopyOnWriteArrayList<>();
+  private static CopyOnWriteArrayList<ChannelWrapper> channelWrappers = new CopyOnWriteArrayList<>();
+
+  public ClientImpl(String serviceName, String zkConn, CuratorFramework curatorFramework, Class<? extends ClientProxy> clientProxyClass, ClientProxy cliet) {
+    this.serviceName = serviceName;
+    this.zkConn = zkConn;
+    this.curatorFramework = curatorFramework;
+    this.clientProxyClass = clientProxyClass;
+    this.cliet = cliet;
+  }
 
 
   @Override
