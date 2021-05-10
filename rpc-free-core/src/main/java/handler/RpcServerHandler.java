@@ -31,6 +31,7 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
   }
   @Override
   protected void channelRead0(ChannelHandlerContext channelHandlerContext, RpcRequest rpcRequest) throws Exception {
+
     String methodName = rpcRequest.getMethodName();
     String serviceName = rpcRequest.getInterfaceName();
     String versionName = rpcRequest.getServiceVersion();

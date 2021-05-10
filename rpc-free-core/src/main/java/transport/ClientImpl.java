@@ -2,14 +2,13 @@ package transport;
 
 
 import io.netty.channel.Channel;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import proxy.ClientProxy;
+import pool.ChannelPool;
 import rpc.free.common.model.RpcRequest;
 import rpc.free.common.model.RpcResponse;
+import rpc.free.registry.zookpeer.ServiceDiscovery;
+import rpc.free.registry.zookpeer.impl.ServiceDiscoveryImpl;
 
 import java.lang.reflect.Method;
 import java.util.Random;
@@ -31,22 +30,17 @@ public class ClientImpl extends Client {
       */
   private String serviceName;//这个是用来发现ZooKeeper服务的
   private String zkConn;
-  private EventLoopGroup eventLoopGroup = new NioEventLoopGroup(2);
-  private int requestTimeoutTimeMills = 10*1000;
-  private CuratorFramework curatorFramework;
-  private Class<? extends ClientProxy> clientProxyClass;
-  private ClientProxy cliet;
+  private int requestTimeoutTimeMills;
+  private ServiceDiscovery serviceDiscovery;
   // 存放字符串Channel对应的map
-  private static CopyOnWriteArrayList<ChannelWrapper> channelWrappers = new CopyOnWriteArrayList<>();
+  public static CopyOnWriteArrayList<ChannelWrapper> channelWrappers;
 
-  public ClientImpl(String serviceName, String zkConn, CuratorFramework curatorFramework, Class<? extends ClientProxy> clientProxyClass, ClientProxy cliet) {
+  public ClientImpl(String serviceName, String zkConn, int requestTimeoutTimeMills, ServiceDiscovery serviceDiscovery) {
     this.serviceName = serviceName;
     this.zkConn = zkConn;
-    this.curatorFramework = curatorFramework;
-    this.clientProxyClass = clientProxyClass;
-    this.cliet = cliet;
+    this.requestTimeoutTimeMills = requestTimeoutTimeMills;
+    this.serviceDiscovery = serviceDiscovery;
   }
-
 
   @Override
   public RpcResponse sendMessage(Class<?> clazz, Method method, Object[] args) {
@@ -55,7 +49,7 @@ public class ClientImpl extends Client {
     request.setMethodName(method.getName());
     request.setParameters(args);
     request.setInterfaceName(serviceName);
-    request.setParameters(method.getParameterTypes());
+    request.setParameters(method.getParameters());
 
     ChannelWrapper channelWrapper = selectChannel();
     if(null == channelWrapper){
@@ -65,7 +59,17 @@ public class ClientImpl extends Client {
       return rpcResponse;
     }
 
-    Channel channel = null;
+    ServiceDiscovery serviceDiscovery = new ServiceDiscoveryImpl(zkConn);
+    String address = serviceDiscovery.discovery(serviceName);
+    String ip = address.split(":")[0];
+    int port = Integer.parseInt(address.split(":")[1]);
+
+    Channel channel = ChannelPool.getChannel(ip, port);
+    try {
+      channel.writeAndFlush(request).sync();
+    } catch (InterruptedException e) {
+      LOGGER.info("[rpc-free-client-ClientImpl]:", e);
+    }
 
     return null;
   }

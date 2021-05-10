@@ -2,6 +2,9 @@ package bootstrap;
 
 import proxy.ClientProxy;
 import proxy.JdkClientProxy;
+import rpc.free.registry.zookpeer.ServiceDiscovery;
+import transport.Client;
+import transport.ClientImpl;
 
 /**
  * @program: rpcfree
@@ -13,16 +16,18 @@ import proxy.JdkClientProxy;
 public class ClientBuilder<T> {
   private String serviceName;
   private String zkConn;
-  private Class<T> serviceInterface;
-  private int requestTimeOutMillis = 1000;
-  private Class<? extends ClientProxy> proxyClass = JdkClientProxy.class;
+  private Integer requestTimeOutMillis;
+  private ServiceDiscovery serviceDiscovery;
 
   public static <T> ClientBuilder<T> builder(){
     return new ClientBuilder<>();
   }
 
-  public ClientBuilder<T> serviceName(String serviceName){
+  public  Client buildClient(){
+    return new ClientImpl( serviceName,  zkConn, requestTimeOutMillis, serviceDiscovery);
+  }
 
+  public ClientBuilder<T> serviceName(String serviceName){
     this.serviceName = serviceName;
     return this;
   }
@@ -32,5 +37,14 @@ public class ClientBuilder<T> {
     return this;
   }
 
+  public ClientBuilder<T> serviceDiscovery(ServiceDiscovery serviceDiscovery){
+    this.serviceDiscovery = serviceDiscovery;
+    return this;
+  }
+
+  public ClientBuilder<T> requestTimeOutMillis(Integer requestTimeOutMillis){
+    this.requestTimeOutMillis = requestTimeOutMillis;
+    return this;
+  }
 
 }

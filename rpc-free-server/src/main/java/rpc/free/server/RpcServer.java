@@ -131,8 +131,6 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
         appName = properties.getProperty("free.rpc.service.appName");
     }
 
-
-
     private void shutdown(EventLoopGroup bossGroup, EventLoopGroup workerGroup) {
         LOGGER.info("[Rc-free-server-info]:Shutting down server {}", serviceAddress);
         bossGroup.shutdownGracefully();

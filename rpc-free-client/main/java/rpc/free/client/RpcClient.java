@@ -26,18 +26,21 @@ public class RpcClient implements ApplicationContextAware, InitializingBean {
 
     private String serviceName;
     private String zkCon;
+    private String ip;
+    private int port;
 
     @Override
     public void afterPropertiesSet() {
-        ServiceDiscovery serviceDiscovery = new ServiceDiscoveryImpl(zkCon);
-        String address = serviceDiscovery.discovery(serviceName);
-        String ip = address.split(":")[0];
-        int port = Integer.parseInt(address.split(":")[1]);
+        afterInit();
         ClientBootStart.connectToServer(ip,port);
     }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        init(applicationContext);
+    }
+
+    private void init(ApplicationContext applicationContext){
         Properties properties= ConfigPropertes.configProperty();
         zkCon = properties.getProperty("free.rpc.service.zkCon");
         Map<String, Object> servers = applicationContext.getBeansWithAnnotation(EnableRpcClient.class);
@@ -53,4 +56,13 @@ public class RpcClient implements ApplicationContextAware, InitializingBean {
             }
         }
     }
+
+    private void afterInit(){
+        ServiceDiscovery serviceDiscovery = new ServiceDiscoveryImpl(zkCon);
+        String address = serviceDiscovery.discovery(serviceName);
+        ip = address.split(":")[0];
+        port = Integer.parseInt(address.split(":")[1]);
+    }
+
+
 }

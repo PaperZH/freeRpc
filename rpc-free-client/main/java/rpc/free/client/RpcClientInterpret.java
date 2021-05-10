@@ -110,7 +110,6 @@ public class RpcClientInterpret {
         String ip = address.split(":")[0];
         int port = Integer.parseInt(address.split(":")[1]);
         Channel channel = ChannelPool.getChannel(ip, port);
-
         try {
             channel.writeAndFlush(request).sync();
         } catch (InterruptedException e) {
